@@ -23,84 +23,123 @@ async function fetcher(query, { variables } = {}) {
   return json.data;
 }
 
-// the function below is an helper that gets the all the
-// author slugs on our blog
-export async function getPostsSlug() {
-  const data = fetcher(`
-    query PostSlugs {
+// fetch all post/article slugs that'll be used to
+// generate dynamic routes of each article when it is clicked upon
+export async function getAllPostSlugs() {
+  const slugs = await fetcher(`
+    query slugs {
       listPosts {
         data {
+          slug
+        }
+      }
+    }
+  `);
+
+  return slugs.listPosts.data;
+}
+
+// the function below is an helper that gets the all the
+// author on our blog
+export async function getAuthors() {
+  const authors = await fetcher(`
+    query authors {
+      listAuthors {
+        data {
+          name
+          about
           slug
         }
       }
     }  
   `);
 
-  return data.listPosts.data;
+  return authors.listAuthors.data;
+}
+
+// query articles {
+//   listPosts(sort: createdOn_ASC) {
+//     data {
+//       title
+//       description
+//       featuredImage
+//     	createdOn
+//       createdBy {
+//         displayName
+//       }
+//     }
+//   }
+// }
+
+// get all articles
+export async function getArticles() {
+  const articles = await fetcher(`
+    query articles {
+      listPosts {
+        data {
+          title
+          description
+          featuredImage
+          createdOn
+          createdBy {
+            displayName
+          }
+        }
+      }
+    }
+  `);
+
+  return articles.listPosts.data;
 }
 
 // helper function that gets an article by its unique slug param
 export async function getArticleBySlug(slug) {
-  const data = await fetcher(`
-
-    `);
+  const data = await fetcher(
+    `
+    query articlesBySlug ($PostsGetWhereInput: PostsGetWhereInput!) {
+        post: getPosts(where: $PostsGetWhereInput) {
+          data {
+            id
+            body
+            slug
+            title
+            createdOn
+            description
+            featuredImage
+            author {
+              name
+              slug
+              picture
+            }
+          }
+        }
+    
+        morePosts: listPosts(limit: 2, sort: createdOn_ASC) {
+          data {
+            id
+            slug
+            title
+            createdOn
+                  description
+            featuredImage
+            author {
+              name
+              picture
+              description
+            }
+          }
+        }
+      }
+    }
+  `,
+    {
+      variables: {
+        PostsGetWhereInput: {
+          slug: slug,
+        },
+      },
+    },
+    preview
+  );
+  return data;
 }
-
-// query authors {
-//     listAuthors {
-//       data {
-//         name
-//         about
-//         slug
-//       }
-//     }
-//   }
-
-//   query articles {
-//     listPosts {
-//       data {
-//         title
-//         description
-//         featuredImage
-//         createdOn
-//         createdBy {
-//           displayName
-//         }
-//       }
-//     }
-//   }
-
-//   query articlesBySlug ($PostsGetWhereInput: PostsGetWhereInput!) {
-//     post: getPosts(where: $PostsGetWhereInput) {
-//       data {
-//         id
-//         body
-//         slug
-//         title
-//         createdOn
-//         description
-//         featuredImage
-//         author {
-//           name
-//           slug
-//           picture
-//         }
-//       }
-//     }
-
-//     morePosts: listPosts(limit: 2, sort: createdOn_ASC) {
-//       data {
-//         id
-//         slug
-//         title
-//         createdOn
-//               description
-//         featuredImage
-//         author {
-//           name
-//           picture
-//           description
-//         }
-//       }
-//     }
-//   }
