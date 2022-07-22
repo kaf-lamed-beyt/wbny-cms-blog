@@ -14,7 +14,7 @@ export default function Article() {
 
 // get the slugs from all articles, map them dynamically as routes
 export async function getStaticPaths() {
-  const articles = await getAllPostSlugs;
+  const articles = await getAllPostSlugs();
 
   return {
     paths: articles.map((articles) => {
@@ -30,8 +30,10 @@ export async function getStaticPaths() {
 
 // fetch and renders the content of the article based
 // on the current slug/route dynamically
-export async function getStaticProps({ params: { slug } }) {
-  const article = await getArticleBySlug(slug);
+export async function getStaticProps(context) {
+  const { params } = context;
+
+  const article = await getArticleBySlug(params.slug);
 
   return {
     props: {

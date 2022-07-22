@@ -1,7 +1,30 @@
 // the API helper function that we'll uuse to get the blog posts
 // from the content models we created alrady.
+// async function fetcher(query, { variables } = {}) {
+//   const response = await fetch(process.env.NEXT_PUBLIC_WEBINY_API_URL, {
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/json",
+//       Authorization: `Bearer ${process.env.WEBINY_API_SECRET}`,
+//     },
+//     body: JSON.stringify({
+//       query,
+//       variables,
+//     }),
+//   });
+
+//   const json = await response.json();
+
+//   if (json.errors) {
+//     console.log(json.errors);
+//     throw new Error("Failed to fetch data");
+//   }
+
+//   return json.data;
+// }
+
 async function fetcher(query, { variables } = {}) {
-  const response = await fetch(process.env.NEXT_PUBLIC_WEBINY_API_URL, {
+  const res = await fetch(process.env.NEXT_PUBLIC_WEBINY_API_URL, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -13,11 +36,10 @@ async function fetcher(query, { variables } = {}) {
     }),
   });
 
-  const json = await response.json();
-
+  const json = await res.json();
   if (json.errors) {
-    console.log(json.errors);
-    throw new Error("Failed to fetch data");
+    console.error(json.errors);
+    throw new Error("Failed to fetch API");
   }
 
   return json.data;
@@ -57,20 +79,6 @@ export async function getAuthors() {
   return authors.listAuthors.data;
 }
 
-// query articles {
-//   listPosts(sort: createdOn_ASC) {
-//     data {
-//       title
-//       description
-//       featuredImage
-//     	createdOn
-//       createdBy {
-//         displayName
-//       }
-//     }
-//   }
-// }
-
 // get all articles
 export async function getArticles() {
   const articles = await fetcher(`
@@ -78,7 +86,7 @@ export async function getArticles() {
       listPosts {
         data {
           title
-          description
+          excerpt
           featuredImage
           createdOn
           createdBy {
@@ -89,7 +97,7 @@ export async function getArticles() {
     }
   `);
 
-  return articles.listPosts.data;
+  return articles.data;
 }
 
 // helper function that gets an article by its unique slug param
@@ -104,7 +112,7 @@ export async function getArticleBySlug(slug) {
             slug
             title
             createdOn
-            description
+            excerpt
             featuredImage
             author {
               name
@@ -120,7 +128,7 @@ export async function getArticleBySlug(slug) {
             slug
             title
             createdOn
-                  description
+            excerpt          
             featuredImage
             author {
               name
