@@ -97,7 +97,7 @@ export async function getArticles() {
     }
   `);
 
-  return articles.data;
+  return articles.listPosts.data;
 }
 
 // helper function that gets an article by its unique slug param
