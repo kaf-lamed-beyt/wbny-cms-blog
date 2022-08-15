@@ -5,9 +5,17 @@ import styled from "styled-components";
 import BlogCard from "../src/components/blogCard";
 
 export const Container = styled.div`
-  display: flex;
-  gap: 16px;
-  flex-wrap: wrap;
+  h3 {
+    font-size: 30px;
+    padding: 20px 60px;
+  }
+
+  .cards {
+    border-top: 1px solid var(--card-border);
+    padding: 40px 60px;
+    display: flex;
+    flex-wrap: wrap;
+  }
 `;
 
 function BlogPage({ posts }) {
@@ -20,9 +28,11 @@ function BlogPage({ posts }) {
       </Head>
       <Container>
         <h3>Blog</h3>
-        {posts?.map((post, index) => {
-          return <BlogCard data={post} key={index} />;
-        })}
+        <div className="cards">
+          {posts?.map((post, index) => {
+            return <BlogCard data={post} key={index} />;
+          })}
+        </div>
       </Container>
     </React.Fragment>
   );

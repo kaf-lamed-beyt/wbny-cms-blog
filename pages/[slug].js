@@ -2,7 +2,9 @@ import React from "react";
 import Head from "next/head";
 import { getArticleBySlug, getAllPostSlugs } from "../src/utils/helper";
 
-export default function Article() {
+export default function Article({ post }) {
+  console.log(`slugPost: ${post}`);
+
   return (
     <React.Fragment>
       <Head>
@@ -34,6 +36,8 @@ export async function getStaticProps(context) {
   const { params } = context;
 
   const article = await getArticleBySlug(params.slug);
+
+  console.log(article);
 
   return {
     props: {

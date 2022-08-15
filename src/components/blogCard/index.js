@@ -3,14 +3,15 @@ import Link from "next/link";
 import Image from "next/image";
 import propTypes from "prop-types";
 import { Card } from "./style/blogcard.styled";
+import dayjs from "dayjs";
 
 const BlogCard = ({
   data: {
     slug,
     featuredImage,
     title,
-    description,
-    createdBy: { displayName },
+    excerpt,
+    author: { name },
     createdOn,
   },
 }) => {
@@ -20,8 +21,8 @@ const BlogCard = ({
         <div className="featured-image">
           <Image
             src={featuredImage}
-            height={100}
-            width={100}
+            height={230}
+            width={320}
             alt={title}
             placeholder="blur"
             blurDataURL
@@ -29,10 +30,10 @@ const BlogCard = ({
         </div>
         <div className="card-info">
           <p className="title">{title}</p>
-          <p className="description">{description}</p>
+          <p className="description">{excerpt}</p>
           <div className="author-date">
-            <p className="date">{createdOn}</p>
-            <p className="author">{displayName}</p>
+            <p className="date">{dayjs(createdOn).format("MMMM, D, YYYY")} </p>
+            <p className="author">{name}</p>
           </div>
         </div>
       </Card>
