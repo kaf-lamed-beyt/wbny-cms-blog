@@ -20,8 +20,8 @@ function BlogPage({ posts }) {
       </Head>
       <Container>
         <h3>Blog</h3>
-        {posts?.map((post) => {
-          <p key={post.indexOf(post)}>{post.title}</p>;
+        {posts?.map((post, index) => {
+          return <BlogCard data={post} key={index} />;
         })}
       </Container>
     </React.Fragment>
