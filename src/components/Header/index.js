@@ -31,7 +31,7 @@ export default function Header() {
   return (
     <Navbar>
       <Link href="/">
-        <h3>Blog</h3>
+        <h3>Disrupt</h3>
       </Link>
       <ul>
         <Link href={"/author"}>

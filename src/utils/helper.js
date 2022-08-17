@@ -36,20 +36,50 @@ export async function getAllPostSlugs() {
   return slugs.listPosts.data;
 }
 
-// the function below is an helper that gets the all the
-// author on our blog
-export async function getAuthors() {
-  const authors = await fetcher(`
-    query authors {
+export async function getAuthorSlugs() {
+  const slugs = await fetcher(`
+    query slugs {
       listAuthors {
         data {
-          name
-          about
           slug
         }
       }
-    }  
+    }
   `);
+
+  return slugs.listAuthors.data;
+}
+
+// the function below is an helper that gets the all the
+// author on our blog
+export async function getAuthorByName(slug) {
+  const authors = await fetcher(
+    `
+  query authorbyName($AuthorsGetWhereInput: AuthorsGetWhereInput!) {
+    listAuthors: getAuthors(where: $AuthorsGetWhereInput) {
+      data {
+        name
+        slug
+        authorsBio
+        picture
+        articles {
+          title,
+          excerpt
+        }
+      }
+    }
+  }	 
+  `,
+    {
+      variables: {
+        AuthorsGetWhereInput: {
+          slug: slug,
+        },
+      },
+    }
+  );
+
+  console.log(`author: ${JSON.stringify(authors)}`);
 
   return authors.listAuthors.data;
 }
@@ -88,6 +118,7 @@ export async function getArticleBySlug(slug) {
           createdOn,
           author {
             name
+            slug
           }
           body
         }
@@ -104,21 +135,3 @@ export async function getArticleBySlug(slug) {
 
   return data.listPosts.data;
 }
-
-//     morePosts: listPosts(limit: 2, sort: createdOn_ASC) {
-//       data {
-//         id
-//         slug
-//         title
-//         createdOn
-//         excerpt
-//         featuredImage
-//         author {
-//           name
-//           picture
-//           description
-//         }
-//       }
-//     }
-//   }
-// }

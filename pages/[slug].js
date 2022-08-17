@@ -42,7 +42,7 @@ export default function Article({
     title,
     body,
     createdOn,
-    author: { name },
+    author: { name, slug },
   },
 }) {
   return (
@@ -55,7 +55,7 @@ export default function Article({
         <div className="content">
           <h2 className="article-title">{title}</h2>
           <div className="author-published-date">
-            <Link href={`/author/${name}`}>
+            <Link href={`/author/${slug}`}>
               <p className="author-name">{name}</p>
             </Link>
             <p>{dayjs(createdOn).format("MMMM, D, YYYY")}</p>
