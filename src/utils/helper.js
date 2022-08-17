@@ -1,4 +1,4 @@
-async function fetcher(query, variables) {
+async function fetcher(query, { variables } = {}) {
   const res = await fetch(process.env.NEXT_PUBLIC_WEBINY_API_URL, {
     method: "POST",
     headers: {
@@ -12,9 +12,9 @@ async function fetcher(query, variables) {
   });
 
   const json = await res.json();
+
   if (json.errors) {
     console.error(json.errors);
-    throw new Error("Failed to fetch API");
   }
 
   return json.data;
@@ -79,27 +79,20 @@ export async function getArticles() {
 // helper function that gets an article by its unique slug param
 export async function getArticleBySlug(slug) {
   const data = await fetcher(
-    `
-    query articlesBySlug ($PostsGetWhereInput: PostsGetWhereInput!) {
-        post: getPosts(where: $PostsGetWhereInput) {
-          data {
-            id
-            body
-            slug
-            title
-            createdOn
-            excerpt
-            featuredImage
-            author {
-              name
-              slug
-              picture
-            }
+    `query PostBySlug($PostsGetWhereInput: PostsGetWhereInput!) {
+      listPosts: getPosts(where: $PostsGetWhereInput) {
+        data {
+          title
+          excerpt
+          featuredImage
+          createdOn,
+          author {
+            name
           }
+          body
         }
       }
-    }  
-  `,
+    }`,
     {
       variables: {
         PostsGetWhereInput: {
@@ -108,7 +101,8 @@ export async function getArticleBySlug(slug) {
       },
     }
   );
-  return data;
+
+  return data.listPosts.data;
 }
 
 //     morePosts: listPosts(limit: 2, sort: createdOn_ASC) {
