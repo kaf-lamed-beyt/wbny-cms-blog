@@ -14,8 +14,6 @@ export const Container = styled.div`
 `;
 
 function BlogPage({ posts }) {
-  console.log(posts);
-
   return (
     <React.Fragment>
       <Head>
@@ -39,8 +37,6 @@ export async function getStaticProps() {
   let articles = await getArticles();
 
   const posts = articles;
-
-  console.log(posts);
 
   return {
     props: {

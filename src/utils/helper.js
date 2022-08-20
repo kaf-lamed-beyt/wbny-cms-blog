@@ -51,7 +51,7 @@ export async function getAuthorSlugs() {
 }
 
 // the function below is an helper that gets the all the
-// author on our blog
+// authors on our blog
 export async function getAuthorByName(slug) {
   const authors = await fetcher(
     `
@@ -78,8 +78,6 @@ export async function getAuthorByName(slug) {
       },
     }
   );
-
-  console.log(`author: ${JSON.stringify(authors)}`);
 
   return authors.listAuthors.data;
 }
